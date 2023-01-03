@@ -1,0 +1,5 @@
+﻿SERVER:SPEC|sa|abc
+DATABASE:
+PATH:\\data\Workshare
+INTERVAL:0|Hrs|true
+DELBKP:5
