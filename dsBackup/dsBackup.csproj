@@ -45,12 +45,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="xxxdsConfig.Dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <EditorConfigFiles Remove="D:\NetPrg\dsBackup\dsBackup\.editorconfig" />
   </ItemGroup>
 
