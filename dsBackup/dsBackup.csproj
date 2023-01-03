@@ -48,4 +48,8 @@
     <EditorConfigFiles Remove="D:\NetPrg\dsBackup\dsBackup\.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
+
 </Project>
