@@ -33,15 +33,19 @@ retained indefinitely.
 
 ## Requirements
 
-- Windows
-- .NET 10 Desktop Runtime (or the .NET 10 SDK, if building from source)
+- Windows (x64)
 - A reachable SQL Server instance (SQL Server Express is the primary
   target) whose backup directory is accessible from the machine running
   dsBackup
+- The installer is self-contained — no separate .NET install needed.
+  Building from source instead requires the .NET 10 SDK.
 
 ## Getting started
 
-1. Build from source (see [Programmer Reference](docs/programmerreference.md#build--run)) or install using the packaged installer.
+1. Download the latest `AutoBackup.msi` from
+   [Releases](https://github.com/gajendhir/dsBackup/releases/latest) and
+   run it — or build from source (see the
+   [Programmer Reference](docs/programmerreference.md#build--run)).
 2. Launch dsBackup and connect to your SQL Server instance.
 3. Select the databases to back up.
 4. Choose where the compressed backups should be stored.
