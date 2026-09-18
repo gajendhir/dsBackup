@@ -1,37 +1,64 @@
-# dsBackup
+<p align="center">
+  <img src="dsBackup/Resources/data-protection.png" alt="dsBackup" width="96" />
+</p>
 
-Backup Utility to take periodic backups and save them in compressed files at selected location. Suited specially for users of the Express Edition.
+<h1 align="center">dsBackup</h1>
 
-![BackupScreen](https://user-images.githubusercontent.com/64296557/210338944-38ffe210-3f44-4326-bf2e-9115788a1da1.png)
+<p align="center"><em>Data Spec Auto Backup System</em></p>
 
-## Step 1.
+A lightweight Windows utility that automates SQL Server database backups —
+built especially for SQL Server Express installations, which have no SQL
+Server Agent or maintenance plans of their own.
 
-Set the Credentials
+Point it at a server, pick the databases, choose where to keep the backups,
+and let it run on a schedule. Each backup is compressed to a zip and
+verified before the raw SQL Server backup file is cleaned up — only the
+last few raw backups are kept per database, while the zip archives are
+retained indefinitely.
 
-![Credentials](https://user-images.githubusercontent.com/64296557/210339000-95972b42-6b3a-4c94-8d1b-7e9b97c1a519.png)
+![dsBackup main window](docs/images/main-window.png)
 
-## Step 2.
+## Features
 
-Select the databases to be included in the backup.
+- Connects to any reachable SQL Server instance, with Windows or SQL
+  Server authentication
+- Multi-select database backup — pick exactly which databases to include
+- Automatic zip compression, with integrity verification before cleanup
+- Configurable retention: keep the last N raw backups per database
+  (zip archives are never pruned)
+- Scheduled, unattended backups on a timer (minutes or hours), or run
+  manually on demand
+- Optional launch on Windows startup
+- SQL login password stored encrypted (Windows DPAPI), never in plain text
 
-![DataBases](https://user-images.githubusercontent.com/64296557/210339015-2626f1e6-e188-4feb-bfe1-c95d8321ff34.png)
+## Requirements
 
-## Step 3.
+- Windows
+- .NET 10 Desktop Runtime (or the .NET 10 SDK, if building from source)
+- A reachable SQL Server instance (SQL Server Express is the primary
+  target) whose backup directory is accessible from the machine running
+  dsBackup
 
-The backup created from Sql-Server will be saved at the default backup folder specified in SQL Server.
+## Getting started
 
-Please set the storage path where the compressed files will be stored.
+1. Build from source (see [Programmer Reference](docs/programmerreference.md#build--run)) or install using the packaged installer.
+2. Launch dsBackup and connect to your SQL Server instance.
+3. Select the databases to back up.
+4. Choose where the compressed backups should be stored.
+5. Set a backup interval, or click **Backup Now** to run one immediately.
 
-![StoragePath](https://user-images.githubusercontent.com/64296557/210339022-848f764a-4589-4c4f-81c6-18d3b33e0bda.png)
+For a full walkthrough written for non-technical users — no coding
+knowledge assumed — see the **[User Guide](docs/userguide.md)**.
 
-## Step 4.
+For architecture, project structure, and build/extension details, see the
+**[Programmer Reference](docs/programmerreference.md)**.
 
-Set the time interval for taking the backup, and also specify the number of last backups to be retained. 
+## License
 
-:::info
+MIT — see [LICENSE.txt](LICENSE.txt).
 
-The compressed files are not removed, only the backup files created from Sql Server are removed.
+---
 
-:::
-
-![AutoTimer](https://user-images.githubusercontent.com/64296557/210339028-82e0bde7-7aea-442b-a241-f1ebecb2ac48.png)
+<p align="center">
+  Software by <a href="https://www.dataspec.info">Data Spec</a>
+</p>
