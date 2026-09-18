@@ -7,8 +7,6 @@ using Microsoft.Win32;
 using System.Security.Principal;
 using System.Diagnostics;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
 
 namespace dsBackup
 {
@@ -32,7 +30,7 @@ namespace dsBackup
         public frmBkp()
         {
             InitializeComponent();
-            cboTime.SelectedIndex=0;
+            cboTime.SelectedIndex = 0;
             AppPath = Application.CommonAppDataPath;
             lblConfigPath.Text = AppPath;
             ProgName = (typeof(Program).Assembly.GetName().Name ?? "");
@@ -57,30 +55,30 @@ namespace dsBackup
 
         private void frmBkp_Load(object sender, EventArgs e)
         {
-            Loaded= false;
-           
-           if (System.IO.File.Exists(AppPath + @"\" + xFile)) 
+            Loaded = false;
+
+            if (System.IO.File.Exists(AppPath + @"\" + xFile))
             {
-                
-                LoadConfig(); 
+
+                LoadConfig();
                 HidePanel();
 
             }
-           else
+            else
             {
                 picSql_Click(sender, e);
                 cboSrvr.Text = System.Environment.MachineName;
                 txtUser.Text = "sa";
                 optAuthWin.Checked = true;
                 cboSrvr.Focus();
-               }
-           Loaded =true;
+            }
+            Loaded = true;
         }
 
         private void btnSrvrL_Click(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
-            DataTable DT  = SmoApplication.EnumAvailableSqlServers(true);
+            DataTable DT = SmoApplication.EnumAvailableSqlServers(true);
             cboSrvr.ValueMember = "Name";
             cboSrvr.DataSource = DT;
             Cursor = Cursors.Default;
@@ -96,7 +94,7 @@ namespace dsBackup
         private void btnOpnFile_Click(object sender, EventArgs e)
         {
             fbd.SelectedPath = txtPath.Text;
-            if (fbd.ShowDialog()==DialogResult.OK)
+            if (fbd.ShowDialog() == DialogResult.OK)
             {
                 txtPath.Text = fbd.SelectedPath;
                 lblPath.Text = txtPath.Text;
@@ -107,9 +105,9 @@ namespace dsBackup
         private void chkLDB_Leave(object sender, EventArgs e)
         {
             if (Loaded)
-            { 
-            SaveConfig();
-            GetDatabaseString();
+            {
+                SaveConfig();
+                GetDatabaseString();
             }
         }
 
@@ -130,7 +128,7 @@ namespace dsBackup
         private void picDB_Click(object sender, EventArgs e)
         {
             HidePanel();
-            pnlDatabase.Visible= true;
+            pnlDatabase.Visible = true;
             //LoadDatabases();
 
         }
@@ -138,7 +136,7 @@ namespace dsBackup
         private void picPath_Click(object sender, EventArgs e)
         {
             HidePanel();
-            pnlPath.Visible= true;
+            pnlPath.Visible = true;
         }
 
         private void btnRun_Click(object sender, EventArgs e)
@@ -146,17 +144,17 @@ namespace dsBackup
             Log.LogEntry(this.Name, "Backup Start");
             pBar.Visible = true;
             lblBkpFile.Visible = true;
-            pnlData.Enabled= false;
-            pnlSql.Enabled= false;
-            pnlDatabase.Enabled= false;
-            pnlPath.Enabled= false;
+            pnlData.Enabled = false;
+            pnlSql.Enabled = false;
+            pnlDatabase.Enabled = false;
+            pnlPath.Enabled = false;
             int i;
             for (i = 0; i <= (chkLDB.Items.Count - 1); i++)
             {
                 if (chkLDB.GetItemChecked(i))
                 {
-                    string dbName = (string) chkLDB.Items[i];
-                    lblBkpFile.Text = "Backup " + dbName +" Started";
+                    string dbName = (string)chkLDB.Items[i];
+                    lblBkpFile.Text = "Backup " + dbName + " Started";
                     Application.DoEvents();
                     BackupDeviceItem bdi;
                     string NewDbName = dbName + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss");
@@ -189,12 +187,12 @@ namespace dsBackup
 
                     using (var archive = ZipFile.Open(xZipFile, ZipArchiveMode.Create))
                     {
-                        lblBkpFile.Text = "Compressing \n"  + Path.GetFileName(xBakFile) + "\nPlease Wait...";
+                        lblBkpFile.Text = "Compressing \n" + Path.GetFileName(xBakFile) + "\nPlease Wait...";
                         Application.DoEvents();
                         archive.CreateEntryFromFile(xBakFile, Path.GetFileName(xBakFile), CompressionLevel.Fastest);
                     }
                     Application.DoEvents();
-                    Log.LogEntry(this.Name, "Compressed",xZipFile);
+                    Log.LogEntry(this.Name, "Compressed", xZipFile);
 
                     DeleteBackupFile(dbName);
                     lblBkpFile.Text = "Cache Cleared\n" + dbName + "\nPlease Wait...";
@@ -234,29 +232,29 @@ namespace dsBackup
 
         private void tmrRef_Tick(object sender, EventArgs e)
         {
-           tmrCnt += 1;
-            if(tmrCnt >= tmrDue)
-              {
-                if (!Logged )
+            tmrCnt += 1;
+            if (tmrCnt >= tmrDue)
+            {
+                if (!Logged)
                 {
                     LoginServer();
                     LoadDatabases();
                 }
-                btnRun.Enabled =true;
+                btnRun.Enabled = true;
                 pBarTmr.Value = 0;
                 tmrRef.Enabled = false;
                 lblDueIn.Text = "Backup Process";
                 tmrCnt = 0;
                 btnRun_Click(sender, e);
-              }
+            }
             else
-                {
-                    btnRun.Enabled = false;
-                    //tmrRef.Enabled = false;
-                    lblDueIn.Text = SecToHrs(tmrDue - tmrCnt);
-                    pBarTmr.Value = tmrCnt;// Convert.ToInt32(tmrDue - tmrCnt);
-                    tmrRef.Enabled = true;
-                }
+            {
+                btnRun.Enabled = false;
+                //tmrRef.Enabled = false;
+                lblDueIn.Text = SecToHrs(tmrDue - tmrCnt);
+                pBarTmr.Value = tmrCnt;// Convert.ToInt32(tmrDue - tmrCnt);
+                tmrRef.Enabled = true;
+            }
         }
 
         private void numTime_ValueChanged(object sender, EventArgs e)
@@ -292,8 +290,8 @@ namespace dsBackup
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-           LoadConfig();
-            
+            LoadConfig();
+
         }
 
         private void chkAutoStart_CheckedChanged(object sender, EventArgs e)
@@ -390,7 +388,7 @@ namespace dsBackup
             int i;
 
             string? Jsontext = File.ReadAllText(AppPath + @"\" + xFile);
-            
+
             configInfo? CnfgDate = JsonConvert.DeserializeObject<configInfo>(Jsontext);
 
             if (CnfgDate != null)
@@ -399,28 +397,28 @@ namespace dsBackup
                 txtUser.Text = CnfgDate.UserName;
                 txtPwd.Text = CnfgDate.Password;
                 optAuthWin.Checked = CnfgDate.WinAuth;
-                optAuthSql.Checked = !optAuthWin.Checked; 
+                optAuthSql.Checked = !optAuthWin.Checked;
                 GetServerString();
                 LoginServer();
                 LoadDatabases();
 
                 if (CnfgDate.Databases != null)
-                { 
+                {
                     for (int j = 0; j <= (CnfgDate.Databases.Count - 1); j++)
+                    {
+                        for (i = 0; i <= (chkLDB.Items.Count - 1); i++)
                         {
-                            for (i = 0; i <= (chkLDB.Items.Count - 1); i++)
+                            if (chkLDB.Items[i].ToString() == CnfgDate.Databases[j].ToString())
                             {
-                                if (chkLDB.Items[i].ToString() == CnfgDate.Databases[j].ToString())
-                                {
-                                    chkLDB.SetItemChecked(i, true);
-                                    break;
-                                }
+                                chkLDB.SetItemChecked(i, true);
+                                break;
                             }
                         }
+                    }
                 }
                 GetDatabaseString();
 
-                txtPath.Text = CnfgDate.Path ;
+                txtPath.Text = CnfgDate.Path;
                 lblPath.Text = CnfgDate.Path;
 
                 numTime.Value = (int)CnfgDate.IntValTime;
@@ -436,7 +434,7 @@ namespace dsBackup
             }
         }
 
-       
+
         private void LoginServer()
         {
             if (Logged)
@@ -452,7 +450,7 @@ namespace dsBackup
             }
             else
             {
-                if (optAuthWin.Checked )
+                if (optAuthWin.Checked)
                 {
                     Srvr = new ServerConnection()
                     {
@@ -490,7 +488,7 @@ namespace dsBackup
             txtUser.ReadOnly = Logged;
             optAuthWin.Enabled = !Logged;
             optAuthSql.Enabled = !Logged;
-            cboSrvr.Enabled = !Logged; 
+            cboSrvr.Enabled = !Logged;
             GetServerString();
         }
 
@@ -505,9 +503,10 @@ namespace dsBackup
                     //txtPath.Text = Sqr.BackupDirectory;
                     if (SqSr != null)
                     {
-                        foreach (Database database in SqSr.Databases) { 
-                        chkLDB.Items.Add(database.Name);
-                                                }
+                        foreach (Database database in SqSr.Databases)
+                        {
+                            chkLDB.Items.Add(database.Name);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -614,6 +613,11 @@ namespace dsBackup
         {
             return (new WindowsPrincipal(WindowsIdentity.GetCurrent()))
                       .IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        private void lblConfigPath_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

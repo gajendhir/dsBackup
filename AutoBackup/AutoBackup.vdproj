@@ -52,10 +52,15 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.CoreRuntime.6.0.x64"
                     {
-                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    "Name" = "8:.NET Runtime 6.0.11 (x64)"
+                    "ProductCode" = "8:Microsoft.NetCore.CoreRuntime.6.0.x64"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.CoreRuntime.6.0.x86"
+                    {
+                    "Name" = "8:.NET Runtime 6.0.11 (x86)"
+                    "ProductCode" = "8:Microsoft.NetCore.CoreRuntime.6.0.x86"
                     }
                 }
             }
@@ -758,7 +763,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_4D5B74A72E26424FAE7D0DCC97E19FE4"
             {
-            "SourcePath" = "8:\\\\data\\NetPrg\\dsBackup\\dsBackup\\obj\\Debug\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\dsBackup\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_35C3E10DCE3B4A18B04AE98C961FD2FF"
