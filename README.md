@@ -4,7 +4,7 @@
 
 <h1 align="center">dsBackup</h1>
 
-<p align="center"><em>Data Spec Auto Backup System</em></p>
+<p align="center"><em>Automatic Backup by Data Spec</em></p>
 
 A lightweight Windows utility that automates SQL Server database backups —
 built especially for SQL Server Express installations, which have no SQL

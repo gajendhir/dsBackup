@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# AutoBackup installer: dotnet publish staging output consumed by the WiX build
+AutoBackup/publish/
+
+# WiX Toolset CLI extension cache (restored automatically on build)
+.wix/

@@ -941,7 +941,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(4, 3, 4, 3);
             Name = "frmBkp";
-            Text = "Backup System by Data Spec";
+            Text = "Automatic Backup by Data Spec";
             Load += frmBkp_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox7).EndInit();
             pnlData.ResumeLayout(false);

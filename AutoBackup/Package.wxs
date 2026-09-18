@@ -1,0 +1,67 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <Package Name="Automatic Backup by Data Spec"
+            Manufacturer="Data Spec"
+            Version="1.0.0"
+            UpgradeCode="7838030f-187a-4e3d-9716-1e681c7875e6"
+            Compressed="yes">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of dsBackup is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="AppIcon" SourceFile="$(sys.SOURCEFILEDIR)..\dsBackup\data-protection.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+    <Property Id="ARPURLINFOABOUT" Value="https://www.dataspec.info" />
+
+    <WixVariable Id="WixUILicenseRtf" Value="$(sys.SOURCEFILEDIR)License.rtf" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Automatic Backup by Data Spec" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="AppProgramMenuFolder" Name="Data Spec" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
+
+    <ComponentGroup Id="AppFiles" Directory="INSTALLFOLDER">
+      <Files Include="$(PublishDir)\**" />
+    </ComponentGroup>
+
+    <ComponentGroup Id="ShortcutComponents" Directory="AppProgramMenuFolder">
+      <Component Id="ApplicationShortcut" Guid="{6B6A1E3E-6A0B-4C3C-9A3E-6C5A5B2A9F11}">
+        <Shortcut Id="StartMenuShortcut"
+                  Name="Automatic Backup by Data Spec"
+                  Description="Automatic Backup by Data Spec"
+                  Target="[INSTALLFOLDER]dsBackup.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon" />
+        <RemoveFolder Id="RemoveAppProgramMenuFolder" On="uninstall" />
+        <RegistryValue Root="HKCU" Key="Software\Data Spec\dsBackup" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="DesktopShortcutComponents" Directory="DesktopFolder">
+      <Component Id="DesktopShortcut" Guid="{9C2D4E7A-3F1B-4A6E-8C5D-2B7A9E4F1D63}">
+        <Shortcut Id="DesktopShortcut"
+                  Name="Automatic Backup by Data Spec"
+                  Description="Automatic Backup by Data Spec"
+                  Target="[INSTALLFOLDER]dsBackup.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon" />
+        <RegistryValue Root="HKCU" Key="Software\Data Spec\dsBackup" Name="desktopShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <Feature Id="Main" Title="dsBackup" Level="1">
+      <ComponentGroupRef Id="AppFiles" />
+      <ComponentGroupRef Id="ShortcutComponents" />
+      <ComponentGroupRef Id="DesktopShortcutComponents" />
+    </Feature>
+
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+
+  </Package>
+</Wix>
