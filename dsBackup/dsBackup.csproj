@@ -7,7 +7,6 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>data-protection.ico</ApplicationIcon>
-    <UseWPF>True</UseWPF>
     <Company>Data Spec</Company>
     <Product>Data Spec Auto Backup System</Product>
     <Title>Data Spec Auto Backup System</Title>
@@ -27,6 +26,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="181.36.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>

@@ -30,22 +30,30 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBkp));
+            toolTip1 = new ToolTip(components);
+            lblBkpPath = new Label();
+            lblPath = new Label();
+            lblServer = new Label();
+            chkAutoStart = new CheckBox();
+            label13 = new Label();
+            pictureBox7 = new PictureBox();
+            btnRunAdm = new Button();
+            lblStatusAutoStart = new Label();
+            lblStatusBackup = new Label();
+            lblStatusAdmin = new Label();
             pnlData = new Panel();
             btnReload = new Button();
             label21 = new Label();
             numBkpNoFile = new NumericUpDown();
             label20 = new Label();
             label19 = new Label();
-            lblBkpPath = new Label();
             chkAuto = new CheckBox();
             cboTime = new ComboBox();
             numTime = new NumericUpDown();
             pictureBox1 = new PictureBox();
             label17 = new Label();
             label18 = new Label();
-            lblPath = new Label();
             lblDatabase = new Label();
-            lblServer = new Label();
             pictureBox5 = new PictureBox();
             picPath = new PictureBox();
             label6 = new Label();
@@ -58,9 +66,8 @@
             picSql = new PictureBox();
             label3 = new Label();
             label2 = new Label();
-            btnRun = new Button();
             label1 = new Label();
-            chkAutoStart = new CheckBox();
+            btnRun = new Button();
             lblBkpFile = new Label();
             pBar = new ProgressBar();
             pnlSql = new Panel();
@@ -79,21 +86,18 @@
             pnlDatabase = new Panel();
             chkLDB = new CheckedListBox();
             label12 = new Label();
-            label13 = new Label();
             label14 = new Label();
             pnlPath = new Panel();
             btnOpnFile = new Button();
             txtPath = new TextBox();
             label15 = new Label();
             fbd = new FolderBrowserDialog();
-            pictureBox7 = new PictureBox();
             tmrRef = new System.Windows.Forms.Timer(components);
             pBarTmr = new ProgressBar();
             lblDueIn = new Label();
             label16 = new Label();
             pnlTmDue = new Panel();
-            btnRunAdm = new Button();
-            lblConfigPath = new Label();
+            ((System.ComponentModel.ISupportInitialize)pictureBox7).BeginInit();
             pnlData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numBkpNoFile).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numTime).BeginInit();
@@ -107,9 +111,143 @@
             pnlSql.SuspendLayout();
             pnlDatabase.SuspendLayout();
             pnlPath.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox7).BeginInit();
             pnlTmDue.SuspendLayout();
             SuspendLayout();
+            // 
+            // lblBkpPath
+            // 
+            lblBkpPath.AutoEllipsis = true;
+            lblBkpPath.Cursor = Cursors.Hand;
+            lblBkpPath.ForeColor = Color.Blue;
+            lblBkpPath.Location = new Point(140, 224);
+            lblBkpPath.Margin = new Padding(4, 0, 4, 0);
+            lblBkpPath.Name = "lblBkpPath";
+            lblBkpPath.Size = new Size(208, 21);
+            lblBkpPath.TabIndex = 24;
+            lblBkpPath.Text = "Backup Path";
+            toolTip1.SetToolTip(lblBkpPath, "Double-click to open this folder in File Explorer.");
+            lblBkpPath.DoubleClick += lblBkpPath_DoubleClick;
+            // 
+            // lblPath
+            // 
+            lblPath.AutoEllipsis = true;
+            lblPath.Cursor = Cursors.Hand;
+            lblPath.ForeColor = Color.Blue;
+            lblPath.Location = new Point(140, 245);
+            lblPath.Margin = new Padding(4, 0, 4, 0);
+            lblPath.Name = "lblPath";
+            lblPath.Size = new Size(208, 21);
+            lblPath.TabIndex = 9;
+            lblPath.Text = "Path";
+            toolTip1.SetToolTip(lblPath, "Double-click to open this folder in File Explorer.");
+            lblPath.DoubleClick += lblPath_DoubleClick;
+            // 
+            // lblServer
+            // 
+            lblServer.AutoSize = true;
+            lblServer.Cursor = Cursors.Hand;
+            lblServer.ForeColor = Color.Blue;
+            lblServer.Location = new Point(55, 73);
+            lblServer.Margin = new Padding(4, 0, 4, 0);
+            lblServer.Name = "lblServer";
+            lblServer.Size = new Size(39, 15);
+            lblServer.TabIndex = 3;
+            lblServer.Text = "Server";
+            toolTip1.SetToolTip(lblServer, "Click to open SQL Server connection settings.");
+            lblServer.Click += picSql_Click;
+            // 
+            // chkAutoStart
+            // 
+            chkAutoStart.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            chkAutoStart.AutoSize = true;
+            chkAutoStart.Location = new Point(15, 439);
+            chkAutoStart.Name = "chkAutoStart";
+            chkAutoStart.Size = new Size(167, 19);
+            chkAutoStart.TabIndex = 28;
+            chkAutoStart.Text = "Load on Windows Start-up";
+            toolTip1.SetToolTip(chkAutoStart, "Check to start this app automatically when Windows starts. Uncheck to remove it from startup.");
+            chkAutoStart.UseVisualStyleBackColor = true;
+            chkAutoStart.CheckedChanged += chkAutoStart_CheckedChanged;
+            // 
+            // label13
+            // 
+            label13.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label13.AutoSize = true;
+            label13.Cursor = Cursors.Hand;
+            label13.Font = new Font("Arial", 14F, FontStyle.Bold);
+            label13.ImageAlign = ContentAlignment.MiddleLeft;
+            label13.Location = new Point(609, 27);
+            label13.Margin = new Padding(4, 0, 4, 0);
+            label13.Name = "label13";
+            label13.Size = new Size(104, 22);
+            label13.TabIndex = 17;
+            label13.Text = "Data Spec";
+            label13.TextAlign = ContentAlignment.MiddleLeft;
+            toolTip1.SetToolTip(label13, "Visit www.dataspec.info");
+            label13.Click += OpenDataSpecWebsite;
+            // 
+            // pictureBox7
+            // 
+            pictureBox7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            pictureBox7.Cursor = Cursors.Hand;
+            pictureBox7.Image = Properties.Resources.dslogo;
+            pictureBox7.Location = new Point(721, 12);
+            pictureBox7.Margin = new Padding(4, 3, 4, 3);
+            pictureBox7.Name = "pictureBox7";
+            pictureBox7.Size = new Size(43, 40);
+            pictureBox7.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox7.TabIndex = 3;
+            pictureBox7.TabStop = false;
+            toolTip1.SetToolTip(pictureBox7, "Visit www.dataspec.info");
+            pictureBox7.Click += OpenDataSpecWebsite;
+            // 
+            // btnRunAdm
+            // 
+            btnRunAdm.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnRunAdm.Location = new Point(12, 456);
+            btnRunAdm.Name = "btnRunAdm";
+            btnRunAdm.Size = new Size(147, 23);
+            btnRunAdm.TabIndex = 29;
+            btnRunAdm.Text = "Run as Administrator";
+            toolTip1.SetToolTip(btnRunAdm, "Relaunches this app with Administrator rights so you can enable or disable autostart.");
+            btnRunAdm.UseVisualStyleBackColor = true;
+            btnRunAdm.Click += btnRunAdm_Click;
+            // 
+            // lblStatusAutoStart
+            // 
+            lblStatusAutoStart.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            lblStatusAutoStart.Location = new Point(319, 457);
+            lblStatusAutoStart.Margin = new Padding(4, 0, 4, 0);
+            lblStatusAutoStart.Name = "lblStatusAutoStart";
+            lblStatusAutoStart.Size = new Size(130, 21);
+            lblStatusAutoStart.TabIndex = 30;
+            lblStatusAutoStart.Text = "Auto-Start: Off";
+            toolTip1.SetToolTip(lblStatusAutoStart, "Whether this app launches automatically when Windows starts.");
+            // 
+            // lblStatusBackup
+            // 
+            lblStatusBackup.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            lblStatusBackup.Location = new Point(459, 457);
+            lblStatusBackup.Margin = new Padding(4, 0, 4, 0);
+            lblStatusBackup.Name = "lblStatusBackup";
+            lblStatusBackup.Size = new Size(110, 21);
+            lblStatusBackup.TabIndex = 31;
+            lblStatusBackup.Text = "Backup: Manual";
+            toolTip1.SetToolTip(lblStatusBackup, "Whether backups run on a schedule (Auto) or only when you click \"Backup Now\" (Manual).");
+            // 
+            // lblStatusAdmin
+            // 
+            lblStatusAdmin.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            lblStatusAdmin.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
+            lblStatusAdmin.ForeColor = Color.FromArgb(0, 120, 0);
+            lblStatusAdmin.Location = new Point(189, 456);
+            lblStatusAdmin.Margin = new Padding(4, 0, 4, 0);
+            lblStatusAdmin.Name = "lblStatusAdmin";
+            lblStatusAdmin.Size = new Size(81, 21);
+            lblStatusAdmin.TabIndex = 32;
+            lblStatusAdmin.Text = "Admin";
+            toolTip1.SetToolTip(lblStatusAdmin, "This app is running with Administrator rights.");
+            lblStatusAdmin.Visible = false;
             // 
             // pnlData
             // 
@@ -141,12 +279,11 @@
             pnlData.Controls.Add(picSql);
             pnlData.Controls.Add(label3);
             pnlData.Controls.Add(label2);
-            pnlData.Controls.Add(btnRun);
             pnlData.Controls.Add(label1);
             pnlData.Location = new Point(13, 12);
             pnlData.Margin = new Padding(4, 3, 4, 3);
             pnlData.Name = "pnlData";
-            pnlData.Size = new Size(375, 504);
+            pnlData.Size = new Size(375, 421);
             pnlData.TabIndex = 1;
             // 
             // btnReload
@@ -162,18 +299,18 @@
             // label21
             // 
             label21.AutoSize = true;
-            label21.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            label21.Location = new Point(44, 342);
+            label21.Font = new Font("Arial", 12F, FontStyle.Bold);
+            label21.Location = new Point(273, 293);
             label21.Margin = new Padding(4, 0, 4, 0);
             label21.Name = "label21";
-            label21.Size = new Size(189, 19);
+            label21.Size = new Size(98, 19);
             label21.TabIndex = 28;
-            label21.Text = "No. of Backups to Keep";
+            label21.Text = "No. to Keep";
             // 
             // numBkpNoFile
             // 
-            numBkpNoFile.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            numBkpNoFile.Location = new Point(55, 365);
+            numBkpNoFile.Font = new Font("Arial", 9.75F);
+            numBkpNoFile.Location = new Point(294, 315);
             numBkpNoFile.Margin = new Padding(4, 3, 4, 3);
             numBkpNoFile.Maximum = new decimal(new int[] { 999, 0, 0, 0 });
             numBkpNoFile.Name = "numBkpNoFile";
@@ -203,26 +340,15 @@
             label19.TabIndex = 25;
             label19.Text = "Backup Path:";
             // 
-            // lblBkpPath
-            // 
-            lblBkpPath.AutoEllipsis = true;
-            lblBkpPath.ForeColor = Color.Blue;
-            lblBkpPath.Location = new Point(140, 224);
-            lblBkpPath.Margin = new Padding(4, 0, 4, 0);
-            lblBkpPath.Name = "lblBkpPath";
-            lblBkpPath.Size = new Size(208, 21);
-            lblBkpPath.TabIndex = 24;
-            lblBkpPath.Text = "Backup Path";
-            // 
             // chkAuto
             // 
             chkAuto.AutoSize = true;
-            chkAuto.Location = new Point(296, 279);
+            chkAuto.Location = new Point(57, 355);
             chkAuto.Margin = new Padding(4, 3, 4, 3);
             chkAuto.Name = "chkAuto";
-            chkAuto.Size = new Size(52, 19);
+            chkAuto.Size = new Size(132, 19);
             chkAuto.TabIndex = 18;
-            chkAuto.Text = "Auto";
+            chkAuto.Text = "Enable Auto Backup";
             chkAuto.UseVisualStyleBackColor = true;
             chkAuto.CheckedChanged += chkAuto_CheckedChanged;
             // 
@@ -231,10 +357,10 @@
             cboTime.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             cboTime.AutoCompleteSource = AutoCompleteSource.ListItems;
             cboTime.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboTime.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            cboTime.Font = new Font("Arial", 9.75F);
             cboTime.FormattingEnabled = true;
             cboTime.Items.AddRange(new object[] { "Min", "Hrs" });
-            cboTime.Location = new Point(151, 300);
+            cboTime.Location = new Point(151, 316);
             cboTime.Margin = new Padding(4, 3, 4, 3);
             cboTime.Name = "cboTime";
             cboTime.Size = new Size(87, 24);
@@ -244,8 +370,8 @@
             // 
             // numTime
             // 
-            numTime.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            numTime.Location = new Point(55, 301);
+            numTime.Font = new Font("Arial", 9.75F);
+            numTime.Location = new Point(55, 317);
             numTime.Margin = new Padding(4, 3, 4, 3);
             numTime.Maximum = new decimal(new int[] { 999, 0, 0, 0 });
             numTime.Name = "numTime";
@@ -279,26 +405,15 @@
             // label18
             // 
             label18.AutoSize = true;
-            label18.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            label18.Font = new Font("Arial", 12F, FontStyle.Bold);
             label18.ImageAlign = ContentAlignment.MiddleLeft;
-            label18.Location = new Point(44, 277);
+            label18.Location = new Point(44, 293);
             label18.Margin = new Padding(4, 0, 4, 0);
             label18.Name = "label18";
             label18.Size = new Size(187, 19);
             label18.TabIndex = 11;
             label18.Text = "Set Interval For Backup";
             label18.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lblPath
-            // 
-            lblPath.AutoEllipsis = true;
-            lblPath.ForeColor = Color.Blue;
-            lblPath.Location = new Point(140, 245);
-            lblPath.Margin = new Padding(4, 0, 4, 0);
-            lblPath.Name = "lblPath";
-            lblPath.Size = new Size(208, 21);
-            lblPath.TabIndex = 9;
-            lblPath.Text = "Path";
             // 
             // lblDatabase
             // 
@@ -310,17 +425,6 @@
             lblDatabase.Size = new Size(264, 15);
             lblDatabase.TabIndex = 6;
             lblDatabase.Text = "Database";
-            // 
-            // lblServer
-            // 
-            lblServer.AutoSize = true;
-            lblServer.ForeColor = Color.Blue;
-            lblServer.Location = new Point(55, 73);
-            lblServer.Margin = new Padding(4, 0, 4, 0);
-            lblServer.Name = "lblServer";
-            lblServer.Size = new Size(39, 15);
-            lblServer.TabIndex = 3;
-            lblServer.Text = "Server";
             // 
             // pictureBox5
             // 
@@ -358,7 +462,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            label7.Font = new Font("Arial", 12F, FontStyle.Bold);
             label7.ImageAlign = ContentAlignment.MiddleLeft;
             label7.Location = new Point(44, 197);
             label7.Margin = new Padding(4, 0, 4, 0);
@@ -415,7 +519,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            label5.Font = new Font("Arial", 12F, FontStyle.Bold);
             label5.ImageAlign = ContentAlignment.MiddleLeft;
             label5.Location = new Point(44, 122);
             label5.Margin = new Padding(4, 0, 4, 0);
@@ -452,7 +556,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            label2.Font = new Font("Arial", 12F, FontStyle.Bold);
             label2.ImageAlign = ContentAlignment.MiddleLeft;
             label2.Location = new Point(44, 47);
             label2.Margin = new Padding(4, 0, 4, 0);
@@ -462,25 +566,10 @@
             label2.Text = "Connect To Microsoft Sql Server";
             label2.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // btnRun
-            // 
-            btnRun.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btnRun.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            btnRun.Image = Properties.Resources.play;
-            btnRun.ImageAlign = ContentAlignment.MiddleLeft;
-            btnRun.Location = new Point(4, 447);
-            btnRun.Margin = new Padding(4, 3, 4, 3);
-            btnRun.Name = "btnRun";
-            btnRun.Size = new Size(186, 53);
-            btnRun.TabIndex = 14;
-            btnRun.Text = "Backup Now";
-            btnRun.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnRun.Click += btnRun_Click;
-            // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            label1.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold);
             label1.Location = new Point(12, 8);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
@@ -488,22 +577,26 @@
             label1.TabIndex = 0;
             label1.Text = "Automatic Backup";
             // 
-            // chkAutoStart
+            // btnRun
             // 
-            chkAutoStart.AutoSize = true;
-            chkAutoStart.Location = new Point(396, 15);
-            chkAutoStart.Name = "chkAutoStart";
-            chkAutoStart.Size = new Size(167, 19);
-            chkAutoStart.TabIndex = 28;
-            chkAutoStart.Text = "Load on Windows Start-up";
-            chkAutoStart.UseVisualStyleBackColor = true;
-            chkAutoStart.CheckedChanged += chkAutoStart_CheckedChanged;
+            btnRun.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnRun.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            btnRun.Image = Properties.Resources.play;
+            btnRun.ImageAlign = ContentAlignment.MiddleLeft;
+            btnRun.Location = new Point(607, 430);
+            btnRun.Margin = new Padding(4, 3, 4, 3);
+            btnRun.Name = "btnRun";
+            btnRun.Size = new Size(157, 45);
+            btnRun.TabIndex = 14;
+            btnRun.Text = "Backup Now";
+            btnRun.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnRun.Click += btnRun_Click;
             // 
             // lblBkpFile
             // 
             lblBkpFile.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             lblBkpFile.ForeColor = Color.Blue;
-            lblBkpFile.Location = new Point(475, 329);
+            lblBkpFile.Location = new Point(477, 332);
             lblBkpFile.Margin = new Padding(4, 0, 4, 0);
             lblBkpFile.Name = "lblBkpFile";
             lblBkpFile.Size = new Size(229, 54);
@@ -515,7 +608,7 @@
             // pBar
             // 
             pBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            pBar.Location = new Point(477, 306);
+            pBar.Location = new Point(479, 309);
             pBar.Margin = new Padding(4, 3, 4, 3);
             pBar.Name = "pBar";
             pBar.Size = new Size(227, 20);
@@ -538,7 +631,7 @@
             pnlSql.Controls.Add(txtUser);
             pnlSql.Controls.Add(lblUser);
             pnlSql.Controls.Add(label8);
-            pnlSql.Font = new Font("Arial", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            pnlSql.Font = new Font("Arial", 10F);
             pnlSql.Location = new Point(396, 60);
             pnlSql.Margin = new Padding(4, 3, 4, 3);
             pnlSql.Name = "pnlSql";
@@ -548,7 +641,7 @@
             // optAuthSql
             // 
             optAuthSql.AutoSize = true;
-            optAuthSql.Location = new Point(184, 36);
+            optAuthSql.Location = new Point(179, 36);
             optAuthSql.Name = "optAuthSql";
             optAuthSql.Size = new Size(184, 20);
             optAuthSql.TabIndex = 10;
@@ -559,7 +652,7 @@
             // optAuthWin
             // 
             optAuthWin.AutoSize = true;
-            optAuthWin.Location = new Point(13, 36);
+            optAuthWin.Location = new Point(8, 36);
             optAuthWin.Name = "optAuthWin";
             optAuthWin.Size = new Size(174, 20);
             optAuthWin.TabIndex = 10;
@@ -571,7 +664,7 @@
             // chkPwd
             // 
             chkPwd.Appearance = Appearance.Button;
-            chkPwd.Font = new Font("Microsoft Sans Serif", 11F, FontStyle.Regular, GraphicsUnit.Point);
+            chkPwd.Font = new Font("Microsoft Sans Serif", 11F);
             chkPwd.Location = new Point(259, 122);
             chkPwd.Margin = new Padding(4, 3, 4, 3);
             chkPwd.Name = "chkPwd";
@@ -608,7 +701,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            label11.Font = new Font("Arial", 12F, FontStyle.Bold);
             label11.ImageAlign = ContentAlignment.MiddleLeft;
             label11.Location = new Point(8, 6);
             label11.Margin = new Padding(4, 0, 4, 0);
@@ -684,7 +777,7 @@
             pnlDatabase.BackColor = Color.FromArgb(0, 192, 192);
             pnlDatabase.Controls.Add(chkLDB);
             pnlDatabase.Controls.Add(label12);
-            pnlDatabase.Font = new Font("Arial", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            pnlDatabase.Font = new Font("Arial", 8.25F);
             pnlDatabase.Location = new Point(396, 129);
             pnlDatabase.Margin = new Padding(4, 3, 4, 3);
             pnlDatabase.Name = "pnlDatabase";
@@ -699,12 +792,13 @@
             chkLDB.Name = "chkLDB";
             chkLDB.Size = new Size(187, 124);
             chkLDB.TabIndex = 1;
+            chkLDB.ItemCheck += chkLDB_ItemCheck;
             chkLDB.Leave += chkLDB_Leave;
             // 
             // label12
             // 
             label12.AutoSize = true;
-            label12.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            label12.Font = new Font("Arial", 12F, FontStyle.Bold);
             label12.ImageAlign = ContentAlignment.MiddleLeft;
             label12.Location = new Point(8, 7);
             label12.Margin = new Padding(4, 0, 4, 0);
@@ -714,26 +808,12 @@
             label12.Text = "Databases";
             label12.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // label13
-            // 
-            label13.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label13.AutoSize = true;
-            label13.Font = new Font("Arial", 14F, FontStyle.Bold, GraphicsUnit.Point);
-            label13.ImageAlign = ContentAlignment.MiddleLeft;
-            label13.Location = new Point(609, 20);
-            label13.Margin = new Padding(4, 0, 4, 0);
-            label13.Name = "label13";
-            label13.Size = new Size(104, 22);
-            label13.TabIndex = 17;
-            label13.Text = "Data Spec";
-            label13.TextAlign = ContentAlignment.MiddleLeft;
-            // 
             // label14
             // 
             label14.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label14.AutoSize = true;
             label14.ForeColor = Color.FromArgb(80, 80, 80);
-            label14.Location = new Point(602, 5);
+            label14.Location = new Point(602, 12);
             label14.Margin = new Padding(4, 0, 4, 0);
             label14.Name = "label14";
             label14.Size = new Size(78, 15);
@@ -772,11 +852,12 @@
             txtPath.Name = "txtPath";
             txtPath.Size = new Size(313, 23);
             txtPath.TabIndex = 1;
+            txtPath.TextChanged += txtPath_TextChanged;
             // 
             // label15
             // 
             label15.AutoSize = true;
-            label15.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            label15.Font = new Font("Arial", 12F, FontStyle.Bold);
             label15.ImageAlign = ContentAlignment.MiddleLeft;
             label15.Location = new Point(6, 5);
             label15.Margin = new Padding(4, 0, 4, 0);
@@ -785,18 +866,6 @@
             label15.TabIndex = 0;
             label15.Text = "Path for Compressed File";
             label15.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // pictureBox7
-            // 
-            pictureBox7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            pictureBox7.Image = Properties.Resources.dslogo;
-            pictureBox7.Location = new Point(721, 5);
-            pictureBox7.Margin = new Padding(4, 3, 4, 3);
-            pictureBox7.Name = "pictureBox7";
-            pictureBox7.Size = new Size(43, 40);
-            pictureBox7.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox7.TabIndex = 3;
-            pictureBox7.TabStop = false;
             // 
             // tmrRef
             // 
@@ -815,9 +884,9 @@
             // lblDueIn
             // 
             lblDueIn.AutoSize = true;
-            lblDueIn.Font = new Font("Arial", 16F, FontStyle.Bold, GraphicsUnit.Point);
+            lblDueIn.Font = new Font("Arial", 16F, FontStyle.Bold);
             lblDueIn.ForeColor = Color.Teal;
-            lblDueIn.Location = new Point(5, 27);
+            lblDueIn.Location = new Point(4, 31);
             lblDueIn.Margin = new Padding(4, 0, 4, 0);
             lblDueIn.Name = "lblDueIn";
             lblDueIn.Size = new Size(77, 26);
@@ -827,7 +896,7 @@
             // label16
             // 
             label16.AutoSize = true;
-            label16.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            label16.Font = new Font("Arial", 12F, FontStyle.Bold);
             label16.ForeColor = Color.Blue;
             label16.Location = new Point(5, 7);
             label16.Margin = new Padding(4, 0, 4, 0);
@@ -842,41 +911,20 @@
             pnlTmDue.Controls.Add(lblDueIn);
             pnlTmDue.Controls.Add(label16);
             pnlTmDue.Controls.Add(pBarTmr);
-            pnlTmDue.Location = new Point(396, 447);
+            pnlTmDue.Location = new Point(396, 356);
             pnlTmDue.Margin = new Padding(4, 3, 4, 3);
             pnlTmDue.Name = "pnlTmDue";
             pnlTmDue.Size = new Size(368, 68);
             pnlTmDue.TabIndex = 25;
             // 
-            // btnRunAdm
-            // 
-            btnRunAdm.Location = new Point(397, 14);
-            btnRunAdm.Name = "btnRunAdm";
-            btnRunAdm.Size = new Size(147, 23);
-            btnRunAdm.TabIndex = 29;
-            btnRunAdm.Text = "Run as Adminstrator";
-            btnRunAdm.UseVisualStyleBackColor = true;
-            btnRunAdm.Click += btnRunAdm_Click;
-            // 
-            // lblConfigPath
-            // 
-            lblConfigPath.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lblConfigPath.AutoEllipsis = true;
-            lblConfigPath.ForeColor = Color.Blue;
-            lblConfigPath.Location = new Point(15, 520);
-            lblConfigPath.Margin = new Padding(4, 0, 4, 0);
-            lblConfigPath.Name = "lblConfigPath";
-            lblConfigPath.Size = new Size(749, 21);
-            lblConfigPath.TabIndex = 29;
-            lblConfigPath.Text = "Config Path";
-            lblConfigPath.Click += lblConfigPath_Click;
-            // 
             // frmBkp
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(777, 539);
-            Controls.Add(lblConfigPath);
+            ClientSize = new Size(777, 487);
+            Controls.Add(lblStatusAutoStart);
+            Controls.Add(lblStatusBackup);
+            Controls.Add(lblStatusAdmin);
             Controls.Add(btnRunAdm);
             Controls.Add(pnlTmDue);
             Controls.Add(chkAutoStart);
@@ -889,11 +937,13 @@
             Controls.Add(pnlData);
             Controls.Add(pnlDatabase);
             Controls.Add(pnlSql);
+            Controls.Add(btnRun);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(4, 3, 4, 3);
             Name = "frmBkp";
             Text = "Backup System by Data Spec";
             Load += frmBkp_Load;
+            ((System.ComponentModel.ISupportInitialize)pictureBox7).EndInit();
             pnlData.ResumeLayout(false);
             pnlData.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)numBkpNoFile).EndInit();
@@ -911,7 +961,6 @@
             pnlDatabase.PerformLayout();
             pnlPath.ResumeLayout(false);
             pnlPath.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox7).EndInit();
             pnlTmDue.ResumeLayout(false);
             pnlTmDue.PerformLayout();
             ResumeLayout(false);
@@ -983,7 +1032,10 @@
         private Button btnRunAdm;
         private RadioButton optAuthSql;
         private RadioButton optAuthWin;
-        private Label lblConfigPath;
+        private Label lblStatusAutoStart;
+        private Label lblStatusBackup;
+        private Label lblStatusAdmin;
+        private ToolTip toolTip1;
     }
 }
 

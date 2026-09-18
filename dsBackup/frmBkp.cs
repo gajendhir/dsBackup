@@ -1,27 +1,18 @@
-﻿using Microsoft.SqlServer.Management.Smo;
-using Microsoft.SqlServer.Management.Common;
 using System.Data;
-using System.IO.Compression;
-using System.IO;
-using Microsoft.Win32;
-using System.Security.Principal;
 using System.Diagnostics;
-using Newtonsoft.Json;
 
 namespace dsBackup
 {
     public partial class frmBkp : Form
     {
 
-        bool Loaded, Logged;
+        bool Loaded;
 
-        ServerConnection? Srvr;
-        Server? SqSr;
         readonly clsLog Log;
-        readonly RegistryKey? rkApp = null;
+        readonly ConfigService ConfigSvc;
+        readonly BackupService BackupSvc;
 
         readonly string AppPath, ProgName;
-        readonly string xFile = "dsConfig.json";
 
         int tmrDue;
         int tmrCnt;
@@ -32,19 +23,21 @@ namespace dsBackup
             InitializeComponent();
             cboTime.SelectedIndex = 0;
             AppPath = Application.CommonAppDataPath;
-            lblConfigPath.Text = AppPath;
             ProgName = (typeof(Program).Assembly.GetName().Name ?? "");
             Log = new clsLog();
+            ConfigSvc = new ConfigService(AppPath, Log);
+            BackupSvc = new BackupService(AppPath, Log);
             numTime.Value = 60;
             try
             {
-                chkAutoStart.Visible = IsAdministrator();
-                btnRunAdm.Visible = !IsAdministrator();
-                rkApp = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                if (rkApp != null)
-                {
-                    chkAutoStart.Checked = rkApp.GetValue(ProgName) != null;
-                }
+                bool elevated = AutoStartService.IsElevated();
+                if (elevated) Text += " (Administrator)";
+                btnRunAdm.Visible = !elevated;
+                chkAutoStart.Checked = AutoStartService.IsRegistered(ProgName);
+                chkAutoStart.Enabled = elevated;
+                toolTip1.SetToolTip(chkAutoStart, elevated
+                    ? "Check to start this app automatically when Windows starts. Uncheck to remove it from startup."
+                    : "Requires Administrator rights to change. Click \"Run as Administrator\" below, then use this checkbox to add or remove this app from Windows startup.");
 
             }
             catch (Exception Ex)
@@ -57,7 +50,7 @@ namespace dsBackup
         {
             Loaded = false;
 
-            if (System.IO.File.Exists(AppPath + @"\" + xFile))
+            if (ConfigSvc.Exists)
             {
 
                 LoadConfig();
@@ -72,13 +65,14 @@ namespace dsBackup
                 optAuthWin.Checked = true;
                 cboSrvr.Focus();
             }
+            UpdateStatusBar();
             Loaded = true;
         }
 
         private void btnSrvrL_Click(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
-            DataTable DT = SmoApplication.EnumAvailableSqlServers(true);
+            DataTable DT = BackupService.EnumerateAvailableServers();
             cboSrvr.ValueMember = "Name";
             cboSrvr.DataSource = DT;
             Cursor = Cursors.Default;
@@ -97,9 +91,13 @@ namespace dsBackup
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 txtPath.Text = fbd.SelectedPath;
-                lblPath.Text = txtPath.Text;
                 SaveConfig();
             }
+        }
+
+        private void txtPath_TextChanged(object sender, EventArgs e)
+        {
+            lblPath.Text = txtPath.Text;
         }
 
         private void chkLDB_Leave(object sender, EventArgs e)
@@ -109,6 +107,13 @@ namespace dsBackup
                 SaveConfig();
                 GetDatabaseString();
             }
+        }
+
+        private void chkLDB_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            // ItemCheck fires before the new check state is applied, so defer
+            // until it has actually taken effect and GetItemChecked() is accurate.
+            BeginInvoke(new Action(GetDatabaseString));
         }
 
         private void chkPwd_CheckedChanged(object sender, EventArgs e)
@@ -148,58 +153,23 @@ namespace dsBackup
             pnlSql.Enabled = false;
             pnlDatabase.Enabled = false;
             pnlPath.Enabled = false;
-            int i;
-            for (i = 0; i <= (chkLDB.Items.Count - 1); i++)
+
+            List<string> databases = [];
+            for (int i = 0; i <= (chkLDB.Items.Count - 1); i++)
             {
                 if (chkLDB.GetItemChecked(i))
                 {
-                    string dbName = (string)chkLDB.Items[i];
-                    lblBkpFile.Text = "Backup " + dbName + " Started";
-                    Application.DoEvents();
-                    BackupDeviceItem bdi;
-                    string NewDbName = dbName + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                    string xBakFile = SqSr?.BackupDirectory + @"\" + NewDbName + ".DS";
-                    string xZipFile = txtPath.Text + @"\" + NewDbName + ".zip";
-
-                    bdi = new BackupDeviceItem(xBakFile, DeviceType.File);
-                    Backup? Bk = new();
-                    Bk = new Backup()
-                    {
-                        Action = BackupActionType.Database,
-                        BackupSetDescription = "Full backup of " + dbName,
-                        BackupSetName = dbName + " Backup",
-                        Database = dbName,
-                        ExpirationDate = DateTime.Today.AddMonths(1),
-                        LogTruncation = BackupTruncateLogType.Truncate
-                    };
-                    Bk.Devices.Add(bdi);
-                    Bk.Incremental = false;
-                    Bk.PercentCompleteNotification = 5;
-                    Bk.PercentComplete += pctComplete;
-                    pBar.Visible = true;
-                    pBar.Value = 0;
-                    lblBkpFile.Visible = true;
-                    Bk.SqlBackup(SqSr);
-                    Log.LogEntry(this.Name, "Backup", xBakFile);
-
-                    lblBkpFile.Text = "Backup " + dbName + " Completed.";
-                    Application.DoEvents();
-
-                    using (var archive = ZipFile.Open(xZipFile, ZipArchiveMode.Create))
-                    {
-                        lblBkpFile.Text = "Compressing \n" + Path.GetFileName(xBakFile) + "\nPlease Wait...";
-                        Application.DoEvents();
-                        archive.CreateEntryFromFile(xBakFile, Path.GetFileName(xBakFile), CompressionLevel.Fastest);
-                    }
-                    Application.DoEvents();
-                    Log.LogEntry(this.Name, "Compressed", xZipFile);
-
-                    DeleteBackupFile(dbName);
-                    lblBkpFile.Text = "Cache Cleared\n" + dbName + "\nPlease Wait...";
-
-                    Application.DoEvents();
+                    databases.Add((string)chkLDB.Items[i]);
                 }
             }
+
+            BackupSvc.RunBackup(
+                databases,
+                txtPath.Text,
+                (int)numBkpNoFile.Value,
+                onStatus: text => { lblBkpFile.Text = text; Application.DoEvents(); },
+                onPercent: percent => pBar.Value = percent);
+
             lblBkpFile.Text = "Process Completed.";
             pBar.Visible = false;
             pnlData.Enabled = true;
@@ -207,11 +177,6 @@ namespace dsBackup
             pnlDatabase.Enabled = true;
             pnlPath.Enabled = true;
             ResetTimer();
-        }
-
-        void pctComplete(object server, PercentCompleteEventArgs e)
-        {
-            pBar.Value = e.Percent;
         }
 
         private void numTime_Leave(object sender, EventArgs e)
@@ -235,7 +200,7 @@ namespace dsBackup
             tmrCnt += 1;
             if (tmrCnt >= tmrDue)
             {
-                if (!Logged)
+                if (!BackupSvc.Connected)
                 {
                     LoginServer();
                     LoadDatabases();
@@ -251,7 +216,7 @@ namespace dsBackup
             {
                 btnRun.Enabled = false;
                 //tmrRef.Enabled = false;
-                lblDueIn.Text = SecToHrs(tmrDue - tmrCnt);
+                lblDueIn.Text = ScheduleHelper.SecToHrs(tmrDue - tmrCnt);
                 pBarTmr.Value = tmrCnt;// Convert.ToInt32(tmrDue - tmrCnt);
                 tmrRef.Enabled = true;
             }
@@ -277,6 +242,7 @@ namespace dsBackup
                 tmrRef.Enabled = chkAuto.Checked;
                 btnRun.Enabled = !chkAuto.Checked;
             }
+            UpdateStatusBar();
         }
 
         private void numBkpNoFile_Leave(object sender, EventArgs e)
@@ -296,17 +262,55 @@ namespace dsBackup
 
         private void chkAutoStart_CheckedChanged(object sender, EventArgs e)
         {
-            if (rkApp != null)
+            if (Loaded)
             {
                 if (chkAutoStart.Checked)
                 {
-                    rkApp.SetValue(ProgName, Application.ExecutablePath.ToString());
+                    AutoStartService.Register(ProgName, Application.ExecutablePath);
                 }
                 else
                 {
-                    rkApp.DeleteValue(ProgName, false);
+                    AutoStartService.Unregister(ProgName);
                 }
             }
+            UpdateStatusBar();
+        }
+
+        private void UpdateStatusBar()
+        {
+            lblStatusAutoStart.Text = chkAutoStart.Checked ? "Auto-Start: On" : "Auto-Start: Off";
+            lblStatusBackup.Text = chkAuto.Checked ? "Backup: Auto" : "Backup: Manual";
+            lblStatusAdmin.Visible = AutoStartService.IsElevated();
+        }
+
+        private void lblBkpPath_DoubleClick(object sender, EventArgs e)
+        {
+            OpenInExplorer(lblBkpPath.Text);
+        }
+
+        private void lblPath_DoubleClick(object sender, EventArgs e)
+        {
+            OpenInExplorer(lblPath.Text);
+        }
+
+        private static void OpenInExplorer(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path)) return;
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "explorer.exe",
+                Arguments = "\"" + path + "\"",
+                UseShellExecute = true
+            });
+        }
+
+        private void OpenDataSpecWebsite(object sender, EventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://www.dataspec.info",
+                UseShellExecute = true
+            });
         }
 
         private void HidePanel()
@@ -335,27 +339,10 @@ namespace dsBackup
             lblDatabase.Text = xTxt;
         }
 
-
-        class configInfo
-        {
-            public string? ServerName { get; set; }
-            public string? UserName { get; set; }
-            public string? Password { get; set; }
-            public bool WinAuth { get; set; }
-            public List<string>? Databases { get; set; }
-            public string? Path { get; set; }
-
-            public int IntValTime { get; set; }
-            public string? IntValDely { get; set; }
-            public bool IntValAuto { get; set; }
-            public int KeepBackupFile { get; set; }
-        }
-
         private void SaveConfig()
         {
-            List<string> DbList = new();
-            int i;
-            for (i = 0; i <= (chkLDB.Items.Count - 1); i++)
+            List<string> DbList = [];
+            for (int i = 0; i <= (chkLDB.Items.Count - 1); i++)
             {
                 if (chkLDB.GetItemChecked(i))
                 {
@@ -363,7 +350,7 @@ namespace dsBackup
                 }
             }
 
-            configInfo CnfInfo = new()
+            BackupSettings settings = new()
             {
                 ServerName = cboSrvr.Text,
                 UserName = txtUser.Text,
@@ -375,40 +362,32 @@ namespace dsBackup
                 IntValDely = cboTime.Text,
                 IntValAuto = chkAuto.Checked,
                 KeepBackupFile = (int)numBkpNoFile.Value,
-
             };
-            string Txtjson = JsonConvert.SerializeObject(CnfInfo);
-            System.IO.File.WriteAllText(AppPath + @"\" + xFile, Txtjson);
-            Log.LogEntry(this.Name, "Config Saved");
+            ConfigSvc.Save(settings);
         }
 
         private void LoadConfig()
         {
-            Log.LogEntry(this.Name, "Loading Default Config");
-            int i;
+            BackupSettings? settings = ConfigSvc.Load();
 
-            string? Jsontext = File.ReadAllText(AppPath + @"\" + xFile);
-
-            configInfo? CnfgDate = JsonConvert.DeserializeObject<configInfo>(Jsontext);
-
-            if (CnfgDate != null)
+            if (settings != null)
             {
-                cboSrvr.Text = CnfgDate.ServerName;
-                txtUser.Text = CnfgDate.UserName;
-                txtPwd.Text = CnfgDate.Password;
-                optAuthWin.Checked = CnfgDate.WinAuth;
+                cboSrvr.Text = settings.ServerName;
+                txtUser.Text = settings.UserName;
+                txtPwd.Text = settings.Password;
+                optAuthWin.Checked = settings.WinAuth;
                 optAuthSql.Checked = !optAuthWin.Checked;
                 GetServerString();
                 LoginServer();
                 LoadDatabases();
 
-                if (CnfgDate.Databases != null)
+                if (settings.Databases != null)
                 {
-                    for (int j = 0; j <= (CnfgDate.Databases.Count - 1); j++)
+                    for (int j = 0; j <= (settings.Databases.Count - 1); j++)
                     {
-                        for (i = 0; i <= (chkLDB.Items.Count - 1); i++)
+                        for (int i = 0; i <= (chkLDB.Items.Count - 1); i++)
                         {
-                            if (chkLDB.Items[i].ToString() == CnfgDate.Databases[j].ToString())
+                            if (chkLDB.Items[i].ToString() == settings.Databases[j].ToString())
                             {
                                 chkLDB.SetItemChecked(i, true);
                                 break;
@@ -418,14 +397,13 @@ namespace dsBackup
                 }
                 GetDatabaseString();
 
-                txtPath.Text = CnfgDate.Path;
-                lblPath.Text = CnfgDate.Path;
+                txtPath.Text = settings.Path;
 
-                numTime.Value = (int)CnfgDate.IntValTime;
-                cboTime.Text = CnfgDate.IntValDely;
-                chkAuto.Checked = (bool)CnfgDate.IntValAuto;
+                numTime.Value = (int)settings.IntValTime;
+                cboTime.Text = settings.IntValDely;
+                chkAuto.Checked = settings.IntValAuto;
 
-                numBkpNoFile.Value = (int)CnfgDate.KeepBackupFile;
+                numBkpNoFile.Value = (int)settings.KeepBackupFile;
             }
 
             if (numBkpNoFile.Value <= 0)
@@ -437,12 +415,9 @@ namespace dsBackup
 
         private void LoginServer()
         {
-            if (Logged)
+            if (BackupSvc.Connected)
             {
-                Srvr?.Disconnect();
-                SqSr = null;
-                Srvr = null;
-                Logged = false;
+                BackupSvc.Disconnect();
                 btnConnect.Text = "Connect";
                 lblServer.ForeColor = Color.Red;
                 lblBkpPath.Text = "";
@@ -450,63 +425,36 @@ namespace dsBackup
             }
             else
             {
-                if (optAuthWin.Checked)
-                {
-                    Srvr = new ServerConnection()
-                    {
-                        LoginSecure = false,
-                        ServerInstance = cboSrvr.Text,
-                        Login = txtUser.Text,
-                        Authentication = (SqlConnectionInfo.AuthenticationMethod)AuthenticationType.Windows,
-                    };
-                }
-                else
-                {
-                    Srvr = new ServerConnection()
-                    {
-                        LoginSecure = false,
-                        ServerInstance = cboSrvr.Text,
-                        Login = txtUser.Text,
-                        Password = txtPwd.Text,
-                    };
-                }
                 try
                 {
-                    Srvr.Connect();
-                    SqSr = new Server(Srvr);
-                    Logged = true;
+                    BackupSvc.Connect(cboSrvr.Text, optAuthWin.Checked, txtUser.Text, txtPwd.Text);
                     btnConnect.Text = "Disconnect";
                     lblServer.ForeColor = Color.Blue;
-                    lblBkpPath.Text = SqSr.BackupDirectory;
+                    lblBkpPath.Text = BackupSvc.BackupDirectory;
                 }
                 catch (SystemException Ex)
                 {
                     MessageBox.Show(Ex.Message);
                 }
             }
-            txtPwd.ReadOnly = Logged;
-            txtUser.ReadOnly = Logged;
-            optAuthWin.Enabled = !Logged;
-            optAuthSql.Enabled = !Logged;
-            cboSrvr.Enabled = !Logged;
+            txtPwd.ReadOnly = BackupSvc.Connected;
+            txtUser.ReadOnly = BackupSvc.Connected;
+            optAuthWin.Enabled = !BackupSvc.Connected;
+            optAuthSql.Enabled = !BackupSvc.Connected;
+            cboSrvr.Enabled = !BackupSvc.Connected;
             GetServerString();
         }
 
         private void LoadDatabases()
         {
             chkLDB.Items.Clear();
-            if (Logged)
+            if (BackupSvc.Connected)
             {
                 try
                 {
-                    //btnSetPath.Enabled = false;
-                    //txtPath.Text = Sqr.BackupDirectory;
-                    if (SqSr != null)
+                    foreach (string name in BackupSvc.GetDatabaseNames())
                     {
-                        foreach (Database database in SqSr.Databases)
-                        {
-                            chkLDB.Items.Add(database.Name);
-                        }
+                        chkLDB.Items.Add(name);
                     }
                 }
                 catch (Exception ex)
@@ -514,39 +462,6 @@ namespace dsBackup
                     MessageBox.Show(ex.Message);
                 }
             }
-        }
-
-        private void DeleteBackupFile(String xFileName)
-        {
-            Int32 xCnt = 0;
-            if (SqSr != null)
-            {
-                DirectoryInfo info = new(SqSr.BackupDirectory);
-                FileInfo[] files = info.GetFiles().OrderByDescending(p => p.CreationTime).Where(p => p.Name.StartsWith(xFileName)).ToArray();
-                foreach (FileInfo file in files)
-                {
-                    xCnt += 1;
-                    if (xCnt > numBkpNoFile.Value)
-                    {
-                        if (File.Exists(file.ToString()))
-                        {
-                            File.Delete(file.ToString());
-                            Log.LogEntry(this.Name, "Deleted.", file.ToString());
-                        }
-                    }
-                }
-            }
-        }
-
-        private static string SecToHrs(int Sec)
-        {
-            int s = Sec % 60;
-            int min = Sec / 60;
-            int m = min % 60;
-            int h = min / 60;
-
-            return $"{h:00}:{m:00}:{s:00}";
-
         }
 
         private void btnRunAdm_Click(object sender, EventArgs e)
@@ -582,17 +497,10 @@ namespace dsBackup
 
         private void ResetTimer()
         {
-            if (numTime.Value > 0 && Logged && chkAuto.Checked)
+            if (numTime.Value > 0 && BackupSvc.Connected && chkAuto.Checked)
             {
                 pnlTmDue.Visible = true;
-                if (cboTime.Text == "Hrs")
-                {
-                    tmrDue = Convert.ToInt32(numTime.Value * 60 * 60);
-                }
-                else
-                {
-                    tmrDue = Convert.ToInt32(numTime.Value * 60);
-                }
+                tmrDue = ScheduleHelper.ToSeconds(numTime.Value, cboTime.Text);
                 pBarTmr.Visible = true;
                 pBarTmr.Value = 0;
                 pBarTmr.Maximum = tmrDue;
@@ -609,15 +517,5 @@ namespace dsBackup
             }
         }
 
-        public static bool IsAdministrator()
-        {
-            return (new WindowsPrincipal(WindowsIdentity.GetCurrent()))
-                      .IsInRole(WindowsBuiltInRole.Administrator);
-        }
-
-        private void lblConfigPath_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
