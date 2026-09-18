@@ -3,7 +3,7 @@
 
   <Package Name="Automatic Backup by Data Spec"
             Manufacturer="Data Spec"
-            Version="1.0.0"
+            Version="1.0.1"
             UpgradeCode="7838030f-187a-4e3d-9716-1e681c7875e6"
             Compressed="yes">
 

@@ -41,6 +41,7 @@
             lblStatusAutoStart = new Label();
             lblStatusBackup = new Label();
             lblStatusAdmin = new Label();
+            lnkUserGuide = new Label();
             pnlData = new Panel();
             btnReload = new Button();
             label21 = new Label();
@@ -222,6 +223,7 @@
             lblStatusAutoStart.Size = new Size(130, 21);
             lblStatusAutoStart.TabIndex = 30;
             lblStatusAutoStart.Text = "Auto-Start: Off";
+            lblStatusAutoStart.TextAlign = ContentAlignment.BottomLeft;
             toolTip1.SetToolTip(lblStatusAutoStart, "Whether this app launches automatically when Windows starts.");
             // 
             // lblStatusBackup
@@ -233,6 +235,7 @@
             lblStatusBackup.Size = new Size(110, 21);
             lblStatusBackup.TabIndex = 31;
             lblStatusBackup.Text = "Backup: Manual";
+            lblStatusBackup.TextAlign = ContentAlignment.BottomLeft;
             toolTip1.SetToolTip(lblStatusBackup, "Whether backups run on a schedule (Auto) or only when you click \"Backup Now\" (Manual).");
             // 
             // lblStatusAdmin
@@ -246,8 +249,23 @@
             lblStatusAdmin.Size = new Size(81, 21);
             lblStatusAdmin.TabIndex = 32;
             lblStatusAdmin.Text = "Admin";
+            lblStatusAdmin.TextAlign = ContentAlignment.BottomLeft;
             toolTip1.SetToolTip(lblStatusAdmin, "This app is running with Administrator rights.");
             lblStatusAdmin.Visible = false;
+            // 
+            // lnkUserGuide
+            // 
+            lnkUserGuide.AutoSize = true;
+            lnkUserGuide.Cursor = Cursors.Hand;
+            lnkUserGuide.ForeColor = Color.Blue;
+            lnkUserGuide.Location = new Point(459, 439);
+            lnkUserGuide.Margin = new Padding(4, 0, 4, 0);
+            lnkUserGuide.Name = "lnkUserGuide";
+            lnkUserGuide.Size = new Size(64, 15);
+            lnkUserGuide.TabIndex = 33;
+            lnkUserGuide.Text = "User Guide";
+            toolTip1.SetToolTip(lnkUserGuide, "Open the online User Guide (GitHub)");
+            lnkUserGuide.Click += OpenUserGuide;
             // 
             // pnlData
             // 
@@ -283,7 +301,7 @@
             pnlData.Location = new Point(13, 12);
             pnlData.Margin = new Padding(4, 3, 4, 3);
             pnlData.Name = "pnlData";
-            pnlData.Size = new Size(375, 421);
+            pnlData.Size = new Size(375, 412);
             pnlData.TabIndex = 1;
             // 
             // btnReload
@@ -929,6 +947,7 @@
             Controls.Add(pnlTmDue);
             Controls.Add(chkAutoStart);
             Controls.Add(pnlPath);
+            Controls.Add(lnkUserGuide);
             Controls.Add(label14);
             Controls.Add(label13);
             Controls.Add(lblBkpFile);
@@ -1036,6 +1055,7 @@
         private Label lblStatusBackup;
         private Label lblStatusAdmin;
         private ToolTip toolTip1;
+        private Label lnkUserGuide;
     }
 }
 

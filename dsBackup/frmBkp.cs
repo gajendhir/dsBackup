@@ -313,6 +313,15 @@ namespace dsBackup
             });
         }
 
+        private void OpenUserGuide(object sender, EventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://github.com/gajendhir/dsBackup/blob/master/docs/userguide.md",
+                UseShellExecute = true
+            });
+        }
+
         private void HidePanel()
         {
             pnlSql.Visible = false;

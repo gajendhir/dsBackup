@@ -10,6 +10,7 @@
     <Company>Data Spec</Company>
     <Product>Data Spec Auto Backup System</Product>
     <Title>Automatic Backup by Data Spec</Title>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
